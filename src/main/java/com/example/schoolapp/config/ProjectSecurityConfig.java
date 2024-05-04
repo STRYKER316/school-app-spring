@@ -2,7 +2,6 @@ package com.example.schoolapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -16,6 +15,8 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/", "/home").permitAll()
+                .requestMatchers("/dashboard").authenticated()
+                .requestMatchers("/login").permitAll()
                 .requestMatchers("/holidays/**").permitAll()
                 .requestMatchers("/contact").permitAll()
                 .requestMatchers("/saveMsg").permitAll()
@@ -23,7 +24,19 @@ public class ProjectSecurityConfig {
                 .requestMatchers("/about").permitAll()
                 .requestMatchers("/assets/**").permitAll()
         );
-        http.formLogin(withDefaults());
+
+        http.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.loginPage("/login")
+                .defaultSuccessUrl("/dashboard")
+                .failureUrl("/login?error=true")
+                .permitAll()
+        );
+
+        http.logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer.logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .invalidateHttpSession(true)
+                .permitAll()
+        );
+
         http.httpBasic(withDefaults());
 
         return http.build();
