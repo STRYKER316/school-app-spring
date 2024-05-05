@@ -16,10 +16,11 @@ public class ProjectSecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
+        http.csrf((csrf) -> csrf.ignoringRequestMatchers("/saveMsg"))
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/", "/home").permitAll()
                 .requestMatchers("/dashboard").authenticated()
                 .requestMatchers("/login").permitAll()
+                .requestMatchers("/logout").permitAll()
                 .requestMatchers("/holidays/**").permitAll()
                 .requestMatchers("/contact").permitAll()
                 .requestMatchers("/saveMsg").permitAll()
