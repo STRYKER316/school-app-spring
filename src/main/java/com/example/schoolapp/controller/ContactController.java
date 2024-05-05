@@ -25,9 +25,9 @@ public class ContactController {
         this.contactService = contactService;
     }
 
+
     @RequestMapping("/contact")
     public String displayContactPage(Model model) {
-
         model.addAttribute("contact", new Contact());
         return "contact";
     }
@@ -35,7 +35,6 @@ public class ContactController {
 
     @RequestMapping(value = "/saveMsg", method = POST)
     public String saveMessage(@Valid @ModelAttribute("contact") Contact contact, Errors errors) {
-
         if (errors.hasErrors()) {
             log.error("Contact form validation failed due to: {}", errors.toString());
             return "contact";
