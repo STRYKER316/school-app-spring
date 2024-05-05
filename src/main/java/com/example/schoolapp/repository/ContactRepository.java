@@ -1,10 +1,12 @@
 package com.example.schoolapp.repository;
 
 import com.example.schoolapp.model.Contact;
+import com.example.schoolapp.rowMappers.ContactRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
+
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -37,15 +39,18 @@ public class ContactRepository {
                 contact.getStatus(),contact.getCreatedAt(),contact.getCreatedBy());
     }
 
-//    public List<Contact> findMsgsWithStatus(String status) {
-//        String sql = "SELECT * FROM CONTACT_MSG WHERE STATUS = ?";
-//        return jdbcTemplate.query(sql,new PreparedStatementSetter() {
-//            public void setValues(PreparedStatement preparedStatement) throws SQLException {
-//                preparedStatement.setString(1, status);
-//            }
-//        },new ContactRowMapper());
-//    }
-//
+
+    public List<Contact> findMsgsWithStatus(String status) {
+        String sql = "SELECT * FROM CONTACT_MSG WHERE STATUS = ?";
+
+        return jdbcTemplate.query(sql,new PreparedStatementSetter() {
+            public void setValues(PreparedStatement preparedStatement) throws SQLException {
+                preparedStatement.setString(1, status);
+            }
+        },new ContactRowMapper());
+    }
+
+
 //    public int updateMsgStatus(int contactId, String status,String updatedBy) {
 //        String sql = "UPDATE CONTACT_MSG SET STATUS = ?, UPDATED_BY = ?,UPDATED_AT =? WHERE CONTACT_ID = ?";
 //        return jdbcTemplate.update(sql,new PreparedStatementSetter() {
@@ -57,5 +62,4 @@ public class ContactRepository {
 //            }
 //        });
 //    }
-
 }
