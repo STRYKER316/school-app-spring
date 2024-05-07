@@ -1,5 +1,6 @@
 package com.example.schoolapp.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -8,9 +9,14 @@ import lombok.Data;
 
 
 @Data
+@Entity
+@Table(name="contact_msg")
 public class Contact extends BaseEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
+
     /*
     * @NotNull: Checks if a given field is not null but allows empty values & zero elements inside collections.
       @NotEmpty: Checks if a given field is not null and its size/length is greater than zero.
