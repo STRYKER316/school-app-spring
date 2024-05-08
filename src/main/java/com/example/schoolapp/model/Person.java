@@ -1,5 +1,7 @@
 package com.example.schoolapp.model;
 
+import com.example.schoolapp.annotation.FieldsValueMatch;
+import com.example.schoolapp.annotation.PasswordValidator;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +11,18 @@ import lombok.Data;
 
 @Data
 @Entity
+@FieldsValueMatch.List({
+        @FieldsValueMatch(
+                field = "pwd",
+                fieldMatch = "confirmPwd",
+                message = "Passwords do not match!"
+        ),
+        @FieldsValueMatch(
+                field = "email",
+                fieldMatch = "confirmEmail",
+                message = "Emails do not match!"
+        ),
+})
 public class Person extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +47,7 @@ public class Person extends BaseEntity {
 
     @NotBlank(message="Password must not be blank")
     @Size(min=5, message="Password must be at least 5 characters long")
-//    @PasswordValidator
+    @PasswordValidator
     private String pwd;
 
     @NotBlank(message="Confirm Password must not be blank")

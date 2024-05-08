@@ -30,7 +30,7 @@ public class PublicController {
 
 
     @RequestMapping(value ="/createUser",method = { RequestMethod.POST})
-    public String createUser(@ModelAttribute("person") Person person, Errors errors) {
+    public String createUser(@Valid @ModelAttribute("person") Person person, Errors errors) {
         if (errors.hasErrors()) {
             return "register";
         }
