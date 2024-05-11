@@ -21547,3 +21547,8 @@ label {
 }
 
 /* ----- Overview ----- */
+
+.control-label:after {
+  content: "*";
+  color: red;
+}

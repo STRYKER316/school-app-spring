@@ -34,10 +34,10 @@ public class UsernamePwdAuthProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        Person person = personRepository.getByEmail(email);
+        Person person = personRepository.findByEmail(email);
 
         if (person != null && person.getPersonId() > 0 && passwordEncoder.matches(password, person.getPwd())) {
-            return new UsernamePasswordAuthenticationToken(person.getName(), password, getGrantedAuthorities(person.getRole()));
+            return new UsernamePasswordAuthenticationToken(email, password, getGrantedAuthorities(person.getRole()));
         } else {
             throw new BadCredentialsException("Invalid Credentials");
         }
