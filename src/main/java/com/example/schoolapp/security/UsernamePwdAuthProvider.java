@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,9 +21,11 @@ import java.util.List;
 public class UsernamePwdAuthProvider implements AuthenticationProvider {
 
     private final PersonRepository personRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsernamePwdAuthProvider(PersonRepository personRepository) {
+    public UsernamePwdAuthProvider(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -33,7 +36,7 @@ public class UsernamePwdAuthProvider implements AuthenticationProvider {
 
         Person person = personRepository.getByEmail(email);
 
-        if (person != null && person.getPersonId() > 0 && password.equals(person.getPwd())) {
+        if (person != null && person.getPersonId() > 0 && passwordEncoder.matches(password, person.getPwd())) {
             return new UsernamePasswordAuthenticationToken(person.getName(), password, getGrantedAuthorities(person.getRole()));
         } else {
             throw new BadCredentialsException("Invalid Credentials");
