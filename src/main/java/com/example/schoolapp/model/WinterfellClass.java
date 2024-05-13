@@ -3,11 +3,13 @@ package com.example.schoolapp.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "class")
 public class WinterfellClass extends BaseEntity {
@@ -21,5 +23,5 @@ public class WinterfellClass extends BaseEntity {
     private String name;
 
     @OneToMany(mappedBy = "winterfellClass", targetEntity = Person.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private Set<Person> students;
+    private Set<Person> persons;
 }
