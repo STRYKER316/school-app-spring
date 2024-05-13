@@ -29,6 +29,10 @@ public class DashboardController {
         model.addAttribute("username", person.getName());
         model.addAttribute("roles", authentication.getAuthorities().toString());
 
+        if (null != person.getWinterfellClass() && null != person.getWinterfellClass().getName()) {
+            model.addAttribute("enrolledClass", person.getWinterfellClass().getName());
+        }
+
         return "dashboard";
     }
 }
