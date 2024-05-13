@@ -1,7 +1,9 @@
 package com.example.schoolapp.controller;
 
+import com.example.schoolapp.model.Course;
 import com.example.schoolapp.model.Person;
 import com.example.schoolapp.model.WinterfellClass;
+import com.example.schoolapp.repository.CourseRepository;
 import com.example.schoolapp.repository.PersonRepository;
 import com.example.schoolapp.repository.WinterfellClassRepository;
 import jakarta.servlet.http.HttpSession;
@@ -22,10 +24,12 @@ public class AdminController {
 
     private final WinterfellClassRepository winterfellClassRepository;
     private final PersonRepository personRepository;
+    private final CourseRepository courseRepository;
 
-    public AdminController(WinterfellClassRepository winterfellClassRepository, PersonRepository personRepository) {
+    public AdminController(WinterfellClassRepository winterfellClassRepository, PersonRepository personRepository, CourseRepository courseRepository) {
         this.winterfellClassRepository = winterfellClassRepository;
         this.personRepository = personRepository;
+        this.courseRepository = courseRepository;
     }
 
 
@@ -124,6 +128,18 @@ public class AdminController {
 
         session.setAttribute("winterfellClass", winterfellClassSaved);
         ModelAndView modelAndView = new ModelAndView("redirect:/admin/displayStudents?classId="+ winterfellClass.getClassId());
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/displayCourses")
+    public ModelAndView displayCourses(Model model) {
+        List<Course> courses = courseRepository.findAll();
+
+        ModelAndView modelAndView = new ModelAndView("courses_secure");
+        modelAndView.addObject("courses", courses);
+        modelAndView.addObject("course", new Course());
 
         return modelAndView;
     }
