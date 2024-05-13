@@ -144,4 +144,27 @@ public class AdminController {
         return modelAndView;
     }
 
+
+    @PostMapping("/addNewCourse")
+    public ModelAndView addNewCourse(Model model, @ModelAttribute("course") Course course) {
+        courseRepository.save(course);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/displayCourses");
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/viewStudents")
+    public ModelAndView viewStudents(Model model, @RequestParam int courseId) {
+        Optional<Course> course = courseRepository.findById(courseId);
+
+        ModelAndView modelAndView = new ModelAndView("course_students");
+        modelAndView.addObject("course", course.get());
+        modelAndView.addObject("person", new Person());
+
+        return modelAndView;
+    }
+
 }
