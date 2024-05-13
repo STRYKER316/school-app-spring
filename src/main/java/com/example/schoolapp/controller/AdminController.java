@@ -157,12 +157,58 @@ public class AdminController {
 
 
     @GetMapping("/viewStudents")
-    public ModelAndView viewStudents(Model model, @RequestParam int courseId) {
+    public ModelAndView viewStudents(Model model, @RequestParam int courseId, HttpSession session,
+                                     @RequestParam(value = "error", required = false) String error) {
         Optional<Course> course = courseRepository.findById(courseId);
 
         ModelAndView modelAndView = new ModelAndView("course_students");
         modelAndView.addObject("course", course.get());
         modelAndView.addObject("person", new Person());
+
+        session.setAttribute("course", course.get());
+        if (error != null) {
+            modelAndView.addObject("errorMessage", "Invalid Email entered!!");
+        }
+
+        return modelAndView;
+    }
+
+
+    @PostMapping("/addStudentToCourse")
+    public ModelAndView addStudentToCourse(Model model, @ModelAttribute("person") Person person, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        Course course = (Course) session.getAttribute("course");
+        Person personEntity = personRepository.findByEmail(person.getEmail());
+
+        if (personEntity == null || !(personEntity.getPersonId() > 0)) {
+            modelAndView.setViewName("redirect:/admin/viewStudents?courseId=" + course.getCourseId() + "&error=true");
+            return modelAndView;
+        }
+
+        personEntity.getCourses().add(course);
+        course.getPersons().add(personEntity);
+        personRepository.save(personEntity);
+
+        modelAndView.setViewName("redirect:/admin/viewStudents?courseId=" + course.getCourseId());
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/deleteStudentFromCourse")
+    public ModelAndView deleteStudentFromCourse(Model model, @RequestParam int personId, HttpSession session) {
+        Course course = (Course) session.getAttribute("course");
+
+        Optional<Person> person = personRepository.findById(personId);
+        person.get().getCourses().remove(course);
+        course.getPersons().remove(person.get());
+
+        personRepository.save(person.get());
+        courseRepository.save(course);
+
+        session.setAttribute("course", course);
+        ModelAndView modelAndView = new ModelAndView("redirect:/admin/viewStudents?courseId=" + course.getCourseId());
 
         return modelAndView;
     }
