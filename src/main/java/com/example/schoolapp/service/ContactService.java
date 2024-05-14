@@ -56,14 +56,21 @@ public class ContactService {
     public boolean updateMsgStatus(int contactId) {
         boolean isUpdated = false;
 
-        Optional<Contact> contact = contactRepository.findById(contactId);
-        if (contact.isPresent()) {
-            contact.get().setStatus(SchoolConstants.CLOSE);
+//        // Taking the help of JPA Queries
+//        Optional<Contact> contact = contactRepository.findById(contactId);
+//        if (contact.isPresent()) {
+//            contact.get().setStatus(SchoolConstants.CLOSE);
+//
+//            Contact updatedContact = contactRepository.save(contact.get());
+//            if (updatedContact != null && updatedContact.getUpdatedBy() != null) {
+//                isUpdated = true;
+//            }
+//        }
 
-            Contact updatedContact = contactRepository.save(contact.get());
-            if (updatedContact != null && updatedContact.getUpdatedBy() != null) {
-                isUpdated = true;
-            }
+        // Taking the help of @Query annotation with derived JPA queries
+        int updatedRows = contactRepository.updateStatusById(SchoolConstants.CLOSE, contactId);
+        if (updatedRows > 0) {
+            isUpdated = true;
         }
 
         return isUpdated;
