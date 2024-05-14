@@ -135,7 +135,7 @@ public class AdminController {
 
     @GetMapping("/displayCourses")
     public ModelAndView displayCourses(Model model) {
-        List<Course> courses = courseRepository.findAll();
+        List<Course> courses = courseRepository.findByOrderByName();
 
         ModelAndView modelAndView = new ModelAndView("courses_secure");
         modelAndView.addObject("courses", courses);
