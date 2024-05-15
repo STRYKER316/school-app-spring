@@ -1,5 +1,6 @@
 package com.example.schoolapp.restservices;
 
+import com.example.schoolapp.constants.SchoolConstants;
 import com.example.schoolapp.model.Contact;
 import com.example.schoolapp.model.Response;
 import com.example.schoolapp.repository.ContactRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -68,6 +70,30 @@ public class ContactRestController {
         }
 
         Response response = new Response("200", "Message deleted successfully");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+
+    @PatchMapping("/closeMsg")
+    public ResponseEntity<Response> closeMsg(@RequestBody Contact contactReq){
+        Response response = new Response();
+
+        Optional<Contact> contact = contactRepository.findById(contactReq.getContactId());
+        if (contact.isPresent()){
+            contact.get().setStatus(SchoolConstants.CLOSE);
+            contactRepository.save(contact.get());
+        } else {
+            response.setStatusCode("400");
+            response.setStatusMsg("Invalid Contact ID received");
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(response);
+        }
+
+        response.setStatusCode("200");
+        response.setStatusMsg("Message successfully closed");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
