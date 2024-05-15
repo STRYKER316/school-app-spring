@@ -1,8 +1,12 @@
 package com.example.schoolapp.restservices;
 
 import com.example.schoolapp.model.Contact;
+import com.example.schoolapp.model.Response;
 import com.example.schoolapp.repository.ContactRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,5 +35,20 @@ public class ContactRestController {
             return contactRepository.findByStatus(contact.getStatus());
         }
         return List.of();
+    }
+
+
+    @PostMapping("/saveMsg")
+    public ResponseEntity<Response> saveMsg(@RequestHeader("invocationFrom") String invocationFrom,
+                                            @Valid @RequestBody Contact contact) {
+        log.info("Invocation from: {}", invocationFrom);
+
+        contactRepository.save(contact);
+
+        Response response = new Response("200", "Message saved successfully");
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header("isMsgSaved", "true")
+                .body(response);
     }
 }
