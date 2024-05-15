@@ -5,7 +5,9 @@ import com.example.schoolapp.model.Response;
 import com.example.schoolapp.repository.ContactRepository;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,4 +53,24 @@ public class ContactRestController {
                 .header("isMsgSaved", "true")
                 .body(response);
     }
+
+
+    @DeleteMapping("/deleteMsg")
+    public ResponseEntity<Response> deleteMsg(RequestEntity<Contact> requestEntity) {
+        HttpHeaders headers = requestEntity.getHeaders();
+        headers.forEach((key, value) -> {
+            log.info("Key: {}, Value: {}", key, value);
+        });
+
+        Contact contact = requestEntity.getBody();
+        if (contact != null) {
+            contactRepository.deleteById(contact.getContactId());
+        }
+
+        Response response = new Response("200", "Message deleted successfully");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
 }
