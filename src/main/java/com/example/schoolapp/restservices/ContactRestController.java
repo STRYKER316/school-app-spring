@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/contact")
 public class ContactRestController {
 
