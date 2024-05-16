@@ -17,10 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Slf4j
-@Controller
+@Controller("profileControllerBean")
 public class ProfileController {
 
-    private PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
     public ProfileController(PersonRepository personRepository) {
         this.personRepository = personRepository;

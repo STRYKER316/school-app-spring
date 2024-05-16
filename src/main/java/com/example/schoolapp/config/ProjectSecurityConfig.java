@@ -41,6 +41,9 @@ public class ProjectSecurityConfig {
                 .requestMatchers("/courses").permitAll()
                 .requestMatchers("/about").permitAll()
                 .requestMatchers("/public/**").permitAll()
+                .requestMatchers("/profile/**").permitAll()
+                .requestMatchers("/courses/**").permitAll()
+                .requestMatchers("/contacts/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
         );
 
