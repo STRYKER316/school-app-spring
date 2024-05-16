@@ -23,7 +23,8 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf((csrf) -> csrf.ignoringRequestMatchers("/saveMsg")
                 .ignoringRequestMatchers("/public/**")
-                .ignoringRequestMatchers("/api/**"))
+                .ignoringRequestMatchers("/api/**")
+                .ignoringRequestMatchers("/data-sapi/**"))
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/", "/home").permitAll()
                 .requestMatchers("/dashboard").authenticated()
                 .requestMatchers("/displayMessages/**").hasRole("ADMIN")
@@ -31,6 +32,7 @@ public class ProjectSecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/student/**").hasRole("STUDENT")
                 .requestMatchers("/api/**").authenticated()
+                .requestMatchers("/data-api/**").authenticated()
                 .requestMatchers("/displayProfile").authenticated()
                 .requestMatchers("/updateProfile").authenticated()
                 .requestMatchers("/login").permitAll()
@@ -41,9 +43,6 @@ public class ProjectSecurityConfig {
                 .requestMatchers("/courses").permitAll()
                 .requestMatchers("/about").permitAll()
                 .requestMatchers("/public/**").permitAll()
-                .requestMatchers("/profile/**").permitAll()
-                .requestMatchers("/courses/**").permitAll()
-                .requestMatchers("/contacts/**").permitAll()
                 .requestMatchers("/assets/**").permitAll()
         );
 
