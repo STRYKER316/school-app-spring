@@ -33,6 +33,17 @@ public class DashboardController {
             model.addAttribute("enrolledClass", person.getWinterfellClass().getName());
         }
 
+        logMessages();
+
         return "dashboard";
+    }
+
+
+    private void logMessages() {
+        log.error("This is an error message from Dashboard page");
+        log.warn("This is a warning message from Dashboard page");
+        log.info("This is an info message from Dashboard page");
+        log.debug("This is a debug message from Dashboard page");
+        log.error("This is an error message from Dashboard page");
     }
 }
