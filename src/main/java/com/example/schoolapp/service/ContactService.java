@@ -1,5 +1,6 @@
 package com.example.schoolapp.service;
 
+import com.example.schoolapp.config.SchoolProps;
 import com.example.schoolapp.constants.SchoolConstants;
 import com.example.schoolapp.model.Contact;
 import com.example.schoolapp.repository.ContactRepository;
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class ContactService {
 
     private final ContactRepository contactRepository;
+    private final SchoolProps schoolProps;
 
     @Autowired
-    public ContactService(ContactRepository contactRepository) {
+    public ContactService(ContactRepository contactRepository, SchoolProps eazySchoolProps, SchoolProps schoolProps) {
         this.contactRepository = contactRepository;
+        this.schoolProps = schoolProps;
     }
 
 
@@ -42,7 +45,11 @@ public class ContactService {
 
 
     public Page<Contact> findMessagesWithOpenStatus(int pageNum, String sortField, String sortDir){
-        int pageSize = 5;
+        int pageSize = schoolProps.getPageSize();
+        if(null != schoolProps.getContact() && null != schoolProps.getContact().get("pageSize")){
+            pageSize = Integer.parseInt(schoolProps.getContact().get("pageSize").trim());
+        }
+
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize,
                 sortDir.equals("asc") ? Sort.by(sortField).ascending()
                         : Sort.by(sortField).descending());
